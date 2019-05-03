@@ -4,16 +4,22 @@
 #include <set>
 #include "G4UserTrackingAction.hh"
 #include "globals.hh"
+//#include "G4TrackVector.hh"  //M. Jia: add for photon propagation
+//#include "G4OpticalPhoton.hh"  //M. Jia
+//#include "G4DynamicParticle.hh"  //M. Jia
+//#include "G4ThreeVector.hh"  //M. Jia
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class G4Track;
 class WCSimTrackingMessenger;
+//class WCSimPrimaryGeneratorAction;  // M. Jia: add for photon propagation
 
 class WCSimTrackingAction : public G4UserTrackingAction
 {
  public:
-   WCSimTrackingAction();
+//   WCSimTrackingAction(WCSimPrimaryGeneratorAction* ); // M. Jia: modified for photon propagation.
+  WCSimTrackingAction();
   ~WCSimTrackingAction();
 
   void PreUserTrackingAction (const G4Track* aTrack);
@@ -30,6 +36,9 @@ private:
   G4float percentageOfCherenkovPhotonsToDraw;
 
   WCSimTrackingMessenger* messenger;
+  //M. Jia: add for photon propagation.
+//  WCSimPrimaryGeneratorAction* generatorAction;
+//  G4TrackVector* newOpticalPhoton;
 };
 
 

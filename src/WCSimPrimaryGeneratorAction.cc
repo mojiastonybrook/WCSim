@@ -75,6 +75,7 @@ WCSimPrimaryGeneratorAction::WCSimPrimaryGeneratorAction(
   useLaserEvt  = false;
   useGPSEvt    = false;
   useRootrackerEvt = false;
+  usePhoProEvt = false;  //M. Jia: addition of photon propagation
   
   fEvNum = 0;
   fInputRootrackerFile = NULL;
@@ -106,6 +107,7 @@ void WCSimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
     // Temporary kludge to turn on/off vector text format 
     G4bool useNuanceTextFormat = true;
+//    G4bool usePhoProEvt = true;
 
   // Do for every event
 
@@ -148,7 +150,7 @@ void WCSimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	    // Read the nuance line (ignore value now)
 
 	    token = readInLine(inputFile, lineSize, inBuf);
-	    mode = BEAM;       //atoi(token[1]);    //break backwards compatibility, should deprecate Nuance though
+	   // mode = BEAM;       //atoi(token[1]);    //break backwards compatibility, should deprecate Nuance though
 
 	    // Read the Vertex line
 	    token = readInLine(inputFile, lineSize, inBuf);
@@ -163,26 +165,26 @@ void WCSimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	    
 	    // First, the neutrino line
 
-	    token=readInLine(inputFile, lineSize, inBuf);
-	    beampdg = atoi(token[1]);
-	    beamenergy = atof(token[2])*MeV;
-	    beamdir = G4ThreeVector(atof(token[3]),
-				    atof(token[4]),
-				    atof(token[5]));
+	   // token=readInLine(inputFile, lineSize, inBuf);
+	   // beampdg = atoi(token[1]);
+	   // beamenergy = atof(token[2])*MeV;
+	   // beamdir = G4ThreeVector(atof(token[3]),
+		//		    atof(token[4]),
+		//		    atof(token[5]));
 
 	    // Now read the target line
 
-	    token=readInLine(inputFile, lineSize, inBuf);
-	    targetpdg = atoi(token[1]);
-	    targetenergy = atof(token[2])*MeV;
-	    targetdir = G4ThreeVector(atof(token[3]),
-				      atof(token[4]),
-				      atof(token[5]));
+	   // token=readInLine(inputFile, lineSize, inBuf);
+	   // targetpdg = atoi(token[1]);
+	   // targetenergy = atof(token[2])*MeV;
+	   // targetdir = G4ThreeVector(atof(token[3]),
+		//		      atof(token[4]),
+		//		      atof(token[5]));
 
 	    // Read the info line, basically a dummy
-	    token=readInLine(inputFile, lineSize, inBuf);
-	    G4cout << "Vector File Record Number " << token[2] << G4endl;
-            vecRecNumber = atoi(token[2]);
+	   // token=readInLine(inputFile, lineSize, inBuf);
+	   // G4cout << "Vector File Record Number " << token[2] << G4endl;
+           // vecRecNumber = atoi(token[2]);
 	    
 	    // Now read the outgoing particles
 	    // These we will simulate.
@@ -197,6 +199,7 @@ void WCSimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
 		if ( token[6] == "0")
 		  {
+                    std::cout<<"simulate one particle!"<<"\n";
 		    G4int pdgid = atoi(token[1]);
 		    G4double energy = atof(token[2])*MeV;
 		    G4ThreeVector dir = G4ThreeVector(atof(token[3]),
@@ -219,6 +222,65 @@ void WCSimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	      }
 	  }
       }
+//    else if (usePhoProEvt)
+//      { 
+//        int lineSize=200;
+//        char inBuf[lineSize];
+//        vector<string> token(1);
+//
+//        token=readInLine(inputFile, lineSize, inBuf);
+//        if (token.size() == 0) 
+//	  {
+//	    G4cout << "end of nuance vector file!" << G4endl;
+//	  }
+//	else if (token[0] != "begin")
+//	  {
+//	    G4cout << "unexpected line begins with " << token[0] << G4endl;
+//	  }
+//        else
+//          {
+//            token = readInLine(inputFile, lineSize, inBuf);
+//            vtx = G4ThreeVector(atof(token[1])*cm,
+//				atof(token[2])*cm,
+//				atof(token[3])*cm);
+//           
+//            SetGenerateVertexInRock(false);
+//
+//            while ( token=readInLine(inputFile, lineSize, inBuf),
+//		    (token[0] == "track")||(token[0]== "opticalphoton") )
+//              {
+        //  if (token[0]=="begin"){ std::cout << "Event begin"<<"\n"; }
+        //  if (token[0]=="end"){ std::cout << "Event end!"<<"\n"; }   
+        //       if (token[0]=="vertex")
+        //        {
+        //          std::cout << "Find one vertex!" << "\n";
+        //          vtx = G4ThreeVector(atof(token[1])*cm,
+	//	   		atof(token[2])*cm,
+	//			atof(token[3])*cm);
+        //        }
+
+//                if (token[0]=="track")
+//                  {
+//                   std::cout << "Find one particle" <<"\n";
+//                   G4int pdgid = atoi(token[1]);
+//                   G4double energy = atof(token[2])*MeV;
+//                   G4ThreeVector dir = G4ThreeVector(atof(token[3]),
+//					       atof(token[4]),
+//				               atof(token[5]));
+
+//	           particleGun-> SetParticleDefinition(particleTable->FindParticle(pdgid));
+//                   particleGun->SetParticleEnergy(energy);
+		    //G4cout << "Particle: " << pdgid << " KE: " << ekin << G4endl;
+//       	           particleGun->SetParticlePosition(vtx);
+//                   particleGun->SetParticleMomentumDirection(dir);
+//                   particleGun->GeneratePrimaryVertex(anEvent);
+//                  }
+//                if (token[0]=="opticalphoton") {std::cout<<"secondary photon!"<<"\n";}
+               // token=readInLine(inputFile, lineSize, inBuf);
+//                std::cout << "token size = "<< token.size()<<"\n";
+//             }
+//          }
+//      }
     else 
       {    // old muline format  
 	inputFile >> nuEnergy >> energy >> xPos >> yPos >> zPos 
@@ -423,6 +485,72 @@ void WCSimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
       SetBeamEnergy(E);
       SetBeamDir(dir);
       SetBeamPDG(pdg);
+    }
+  else if (usePhoProEvt)
+    {
+
+     int lineSize=200;
+     char inBuf[lineSize];
+     vector<string> token(1);
+     int photonNum = 0;
+
+     token=readInLine(inputFile, lineSize, inBuf);
+     if (token.size() == 0) 
+       {
+	  G4cout << "end of nuance vector file!" << G4endl;
+       }
+     else if (token[0] != "begin")
+       {
+	  G4cout << "unexpected line begins with " << token[0] << G4endl;
+       }
+     else
+       {
+          token = readInLine(inputFile, lineSize, inBuf);
+          vtx = G4ThreeVector(atof(token[1])*cm, atof(token[2])*cm, atof(token[3])*cm);
+           
+          SetGenerateVertexInRock(false);
+
+          while ( token=readInLine(inputFile, lineSize, inBuf),
+		    (token[0] == "track")||(token[0]== "opticalphoton") )
+            {
+              if (token[0]=="track")
+                {
+                 std::cout << "Find one particle" <<"\n";
+                 G4int pdgid = atoi(token[1]);
+                 G4double energy = atof(token[2])*MeV;
+                 G4ThreeVector dir = G4ThreeVector(atof(token[3]), atof(token[4]), atof(token[5]));
+
+	         particleGun->SetParticleDefinition(particleTable->FindParticle(pdgid));
+                 particleGun->SetParticleEnergy(energy);
+		    //G4cout << "Particle: " << pdgid << " KE: " << ekin << G4endl;
+       	         particleGun->SetParticlePosition(vtx);
+                 particleGun->SetParticleMomentumDirection(dir);
+                 particleGun->GeneratePrimaryVertex(anEvent);
+                }
+              else if (token[0]=="opticalphoton") 
+                {
+                 std::cout<<"secondary photon!"<<"\n";
+                 photonVtx[photonNum] = G4ThreeVector(atof(token[1]), atof(token[2]), atof(token[3]));
+                 photonTime[photonNum] = atof(token[4]);
+                 photonWaveLength[photonNum] = atof(token[5]);
+                 photonDir[photonNum] = G4ThreeVector(atof(token[6]), atof(token[7]), atof(token[8]));
+                 photonPol[photonNum] = G4ThreeVector(atof(token[9]), atof(token[10]), atof(token[11]));
+
+//                 particleGun->SetParticleDefinition(particleTable->FindParticle("opticalphoton"));
+//                 particleGun->SetParticleDefinition(particleTable->FindParticle("gamma"));
+//                 particleGun->SetParticleTime(photonTime[photonNum]);
+//                 particleGun->SetParticlePosition(photonVtx[photonNum]);
+//                 particleGun->SetParticleMomentumDirection(photonDir[photonNum]);
+//                 particleGun->SetParticleEnergy(1.2389e-3 / photonWaveLength[photonNum]);
+//                 particleGun->SetParticlePolarization(photonPol[photonNum]);
+//                 particleGun->GeneratePrimaryVertex(anEvent);
+
+                 photonNum ++;
+                }
+             // std::cout << "token size = "<< token.size()<<"\n";
+              maxPhotonNumber = photonNum;
+            }
+       }
     }
 }
 

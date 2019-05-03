@@ -4,17 +4,25 @@
 #include "G4Event.hh"
 #include "G4UserSteppingAction.hh"
 #include "G4ThreeVector.hh"
+//#include "G4TrackVector.hh"  //M. Jia: add for photon propagation
+//#include "G4OpticalPhoton.hh"  //M. Jia
+//#include "G4DynamicParticle.hh"  //M. Jia
+//#include "G4ThreeVector.hh"  //M. Jia
+
+#include <vector>
 
 class G4HCofThisEvent;
 class G4Event;
+//class WCSimPrimaryGeneratorAction;  //M. Jia: add for photon propagation.
 
 class WCSimSteppingAction : public G4UserSteppingAction
 {
 
 public:
+//  WCSimSteppingAction(WCSimPrimaryGeneratorAction* );
+//  {};  //M. Jia: add for photon propagation.
   WCSimSteppingAction()
-  {};
-
+  { };
   ~WCSimSteppingAction()
   { };
 
@@ -42,7 +50,10 @@ public:
 private:
 
   G4double ret[2];
-
+//  WCSimPrimaryGeneratorAction* generatorAction; //M. Jia: add for photon propagation. 
+//  G4TrackVector* newOpticalPhoton; 
+//  std::vector<G4Track* >* newOpticalPhoton;
+//  G4int primaryStepCounter;
 };
 
 

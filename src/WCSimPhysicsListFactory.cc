@@ -143,10 +143,23 @@ void WCSimPhysicsListFactory::InitializeList(){
         const_cast<G4VPhysicsConstructor*> (phys->GetPhysics(i));
       if (elem == NULL) break;
       G4cout << "RegisterPhysics: " << elem->GetPhysicsName() << G4endl;
+      // modified by M. Jia. To switch EM model
+//      if (elem->GetPhysicsName() == "G4EmStandard") {
+//        G4cout << "Default EM Model: G4EmStandard >>>> ";
+//        RegisterPhysics(new G4EmStandardPhysics_option4());
+//        G4cout << "Switched to G4EmStandard_option4" << G4endl;
+//      } else {
+//        RegisterPhysics(elem);
+//      }
+      
       RegisterPhysics(elem);
     }
     G4cout << "RegisterPhysics: OpticalPhysics" << G4endl; 
     RegisterPhysics(new G4OpticalPhysics());
+    //M. Jia: register photon propagation process.
+    G4cout << "RegisterPhysics: PhotonPropagation Process" << G4endl;
+    RegisterPhysics(new WCSimPhotonPropagationBuilder());
+    G4cout << "PhotonPropagation Process added!" << G4endl;
   } else {
     G4cout << "Physics list " << PhysicsListName << " is not understood" << G4endl;
   }

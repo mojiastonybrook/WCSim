@@ -7,10 +7,14 @@
 #include "G4VProcess.hh"
 #include "WCSimTrackInformation.hh"
 #include "WCSimTrackingMessenger.hh"
+//#include "WCSimPrimaryGeneratorAction.hh"  // M. Jia: add for photon propagation
+//#include "G4TrackVector.hh"  //M .Jia: add for photon propagation.
+//#include "G4ParticleMomentum.hh"  //M. Jia:
 
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 
+//WCSimTrackingAction::WCSimTrackingAction(WCSimPrimaryGeneratorAction* myGenerator) : generatorAction(myGenerator)  // M. Jia
 WCSimTrackingAction::WCSimTrackingAction()
 {
 
@@ -48,6 +52,7 @@ void WCSimTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
   // and store them in output file. Difficult to control them all, so best only
   // use for visualization, not for storing in ROOT.
 
+//  std::cout << "test"<<" "<<"This should occur only once in each event."<<"\n";
 
   if ( aTrack->GetDefinition() != G4OpticalPhoton::OpticalPhotonDefinition()
        || G4UniformRand() < percentageOfCherenkovPhotonsToDraw/100. )
@@ -58,6 +63,60 @@ void WCSimTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     }
   else 
     fpTrackingManager->SetStoreTrajectory(false);
+//M. Jia: Following added for photon propagation.
+//  if (generatorAction->IsUsingPhoProEvtGenerator())
+//    {
+//      std::cout<< "Photon propagation mode detected!"<<"\n";
+      
+//      if ( aTrack->GetDefinition() != G4OpticalPhoton::OpticalPhotonDefinition())
+//        {
+//         const G4VProcess* creatorProcess = aTrack->GetCreatorProcess();
+//         if (creatorProcess != 0)
+//           {
+//            std::cout<<"Creator process found!"<<"\n";
+//           }
+//         else 
+//           {
+//            std::cout<<"No process attached!"<<"\n";
+//            const G4Step* aStep = aTrack->GetStep();
+//            if (aStep == 0)
+//              { 
+//                std::cout<< "No step attached!"<<"\n";
+//              }  
+//            for (int i=0; i < (generatorAction->GetMaxPhotonNumber()); i++)
+//              {
+//               std::cout<< " "<<(generatorAction->GetPhotonVtx())[i].x()
+//                        << " "<<(generatorAction->GetPhotonVtx())[i].y()
+//                        << " "<<(generatorAction->GetPhotonVtx())[i].z()
+//                        << " "<<(generatorAction->GetPhotonDir())[i].x()
+//                        << " "<<(generatorAction->GetPhotonDir())[i].y()
+//                        << " "<<(generatorAction->GetPhotonDir())[i].z()                        
+//                        <<"\n";
+//               G4ParticleMomentum photonMomentum((generatorAction->GetPhotonDir())[i].x(), 
+//                                                 (generatorAction->GetPhotonDir())[i].y(),
+//                                                 (generatorAction->GetPhotonDir())[i].z()); 
+//               G4DynamicParticle* aCerenkovPhoton = 
+//                                  new G4DynamicParticle(G4OpticalPhoton::OpticalPhoton(), 
+//                                                        photonMomentum);
+//               aCerenkovPhoton->SetPolarization((generatorAction->GetPhotonPol())[i].x(),
+//                                                (generatorAction->GetPhotonPol())[i].y(),
+//                                                (generatorAction->GetPhotonPol())[i].z()); 
+//               aCerenkovPhoton->SetKineticEnergy(1.2389e-3 * (generatorAction->GetPhotonWaveLength())[i] );
+//               G4double aSecondaryTime = (generatorAction->GetPhotonTime())[i];
+//               G4ThreeVector aSecondaryPosition = (generatorAction->GetPhotonVtx())[i];
+//               G4Track* aSecondaryTrack = new G4Track(aCerenkovPhoton,aSecondaryTime,aSecondaryPosition);
+              // aSecondaryTrack->SetTouchableHandle( ((aTrack->GetStep())->GetPreStepPoint())->GetTouchableHandle());
+              // newOpticalPhoton->push_back(aSecondaryTrack);
+//               std::cout<<"Cherenkov photons added!"<<"\n";
+//              }
+            
+           // std::cout<<"Cherenkov photons added!"<<"\n";
+//           }
+         
+//         ((G4Track*)aTrack)->SetTrackStatus(fStopAndKill);
+//         std::cout<<"Primary particle killed!"<<"\n"; 
+//        }
+//    }
 }
 
 void WCSimTrackingAction::PostUserTrackingAction(const G4Track* aTrack)

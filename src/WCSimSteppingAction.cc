@@ -14,19 +14,114 @@
 #include "G4RunManager.hh"
 #include "G4OpBoundaryProcess.hh"
 
+//#include "WCSimPrimaryGeneratorAction.hh"  //M. Jia.
+#include "G4ParticleMomentum.hh"
+#include "G4DynamicParticle.hh"
+#include "G4OpticalPhoton.hh"
+
 G4int WCSimSteppingAction::n_photons_through_mPMTLV = 0;
 G4int WCSimSteppingAction::n_photons_through_acrylic = 0;
 G4int WCSimSteppingAction::n_photons_through_gel = 0;
 G4int WCSimSteppingAction::n_photons_on_blacksheet = 0;
 G4int WCSimSteppingAction::n_photons_on_smallPMT = 0;
 
+//WCSimSteppingAction::WCSimSteppingAction(WCSimPrimaryGeneratorAction* myGenerator) : generatorAction(myGenerator)
+//{ primaryStepCounter = 0; }  // M. Jia add for photon propagation.
 
 void WCSimSteppingAction::UserSteppingAction(const G4Step* aStep)
 {
   //DISTORTION must be used ONLY if INNERTUBE or INNERTUBEBIG has been defined in BidoneDetectorConstruction.cc
   
   const G4Track* track       = aStep->GetTrack();
-  
+
+ // M. Jia: add for photon propagation.
+//if ( track->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
+//	const G4VProcess* creatorProcess = track->GetCreatorProcess();
+//        if (creatorProcess != 0)
+//           {
+//            std::cout<<"Creator process found!"<<"\n";
+//            if (creatorProcess->GetProcessName()!= "PhotonPropagation"){ 
+//             std::cout<<"Process: "<< creatorProcess->GetProcessName()<<"\n";
+//            }
+//           }
+//	else{
+//	    std::cout<<"No Creator!"<<"\n";
+//            return 0;
+//	   }
+//
+//}
+//  if (generatorAction->IsUsingPhoProEvtGenerator())
+//    {
+//      std::cout<< "Photon propagation mode detected!"<<"\n";
+      
+//      if ( track->GetDefinition() != G4OpticalPhoton::OpticalPhotonDefinition())
+//        {
+//         const G4VProcess* creatorProcess = track->GetCreatorProcess();
+//         if (creatorProcess != 0)
+//           {
+//            std::cout<<"Creator process found!"<<"\n";
+//           }
+//         else 
+//           {
+//            std::cout<<"No process attached!"<<"\n";
+//            std::cout<<"track ID: "<< track->GetTrackID()<<"\n";
+//            primaryStepCounter ++;
+//            std::cout<< "primaryStepCounter = "<< primaryStepCounter<<"\n";
+//            if (primaryStepCounter == 1)
+//            {
+//              newOpticalPhoton = new G4TrackVector();
+//              ((G4Step*)aStep)->NewSecondaryVector();
+//              for (int i=0; i < (generatorAction->GetMaxPhotonNumber()); i++)
+//                {
+//                 std::cout<< " "<<(generatorAction->GetPhotonVtx())[i].x()
+//                          << " "<<(generatorAction->GetPhotonVtx())[i].y()
+//                          << " "<<(generatorAction->GetPhotonVtx())[i].z()
+//                          << " "<<(generatorAction->GetPhotonDir())[i].x()
+//                          << " "<<(generatorAction->GetPhotonDir())[i].y()
+//                          << " "<<(generatorAction->GetPhotonDir())[i].z()                        
+//                          <<"\n";
+
+//                 G4ParticleMomentum photonMomentum((generatorAction->GetPhotonDir())[i].x(),
+//                                                   (generatorAction->GetPhotonDir())[i].y(),
+//                                                   (generatorAction->GetPhotonDir())[i].z()); 
+//                 G4DynamicParticle* aCerenkovPhoton = 
+//                                    new G4DynamicParticle(G4OpticalPhoton::OpticalPhoton(), 
+//                                                         photonMomentum);
+//                 aCerenkovPhoton->SetPolarization((generatorAction->GetPhotonPol())[i].x(),
+//                                                  (generatorAction->GetPhotonPol())[i].y(),
+//                                                  (generatorAction->GetPhotonPol())[i].z()); 
+//                 aCerenkovPhoton->SetKineticEnergy(1.2389e-3 / (generatorAction->GetPhotonWaveLength())[i] );
+//                 G4double aSecondaryTime = (generatorAction->GetPhotonTime())[i];
+//                 G4ThreeVector aSecondaryPosition = (generatorAction->GetPhotonVtx())[i];
+
+//                 G4Track* aSecondaryTrack = new G4Track(aCerenkovPhoton,aSecondaryTime,aSecondaryPosition);
+//                 aSecondaryTrack->SetTouchableHandle((aStep->GetPreStepPoint())->GetTouchableHandle());
+//                 aSecondaryTrack->SetParentID(track->GetTrackID()); 
+                
+//                 aSecondaryTrack->SetGoodForTrackingFlag();
+//                 if(aSecondaryTrack->IsGoodForTracking()) { std::cout<< "good for tracking!"<<"\n"; }
+
+//                 newOpticalPhoton->push_back(aSecondaryTrack);
+//                 std::cout<<"Cherenkov photons added!"<<"\n";
+//                }
+//              ((G4Step*)aStep)->SetSecondary(newOpticalPhoton); 
+//              std::cout<<"Secondary List reset!"<<"\n";
+           // const std::vector<const G4Track* >* currentSecondary = aStep->GetSecondaryInCurrentStep();
+           // std::cout<<"test: "<< ((*currentSecondary)[0])->GetMomentumDirection()<<"\n";
+//           }
+//         }
+//         if(primaryStepCounter == 2) {
+//           ((G4Track*)track)->SetTrackStatus(fStopAndKill);
+//            std::cout<< " Particle killed! "<<"\n";
+//           }        
+//       }
+//     else
+//       { 
+//         const G4VProcess* creatorProcess = track->GetCreatorProcess();
+//         if(creatorProcess != 0) { std::cout<< "Secondary from physical process!"<<"\n"; }
+//         else {std::cout<< "Secondary from photon propagation!"<<"\n";}
+//       } 
+//   } 
   // Not used:
   //const G4Event* evt = G4RunManager::GetRunManager()->GetCurrentEvent();
   //G4VPhysicalVolume* volume  = track->GetVolume();
@@ -128,7 +223,7 @@ void WCSimSteppingAction::UserSteppingAction(const G4Step* aStep)
 //    G4cout << " PROBLEM! " << theTrack->GetCreatorProcess()->GetProcessName() <<
 //  std::flush << G4endl;
 //  }
-  
+ 
 }
 
 

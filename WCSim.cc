@@ -93,12 +93,13 @@ int main(int argc,char** argv)
 
   runManager->SetUserAction(new WCSimEventAction(myRunAction, WCSimdetector,
 						 myGeneratorAction));
+//  runManager->SetUserAction(new WCSimTrackingAction(myGeneratorAction));  //M. Jia: add for photon propagaion.
   runManager->SetUserAction(new WCSimTrackingAction);
 
   runManager->SetUserAction(new WCSimStackingAction(WCSimdetector));
 
+//  runManager->SetUserAction(new WCSimSteppingAction(myGeneratorAction));  //M. Jia: add for photon propagation
   runManager->SetUserAction(new WCSimSteppingAction);
-
 
   // Initialize G4 kernel
   runManager->Initialize();

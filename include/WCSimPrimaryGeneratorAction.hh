@@ -67,7 +67,15 @@ class WCSimPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
         G4String GetGeneratorTypeString();
 
         void SaveOptionsToOutput(WCSimRootOptions * wcopt);
-    
+
+        //M. Jia: add public interface for photon propagation.
+        G4int GetMaxPhotonNumber() {return maxPhotonNumber;};
+        G4ThreeVector* GetPhotonVtx() {return photonVtx;};
+        G4ThreeVector* GetPhotonDir() {return photonDir;};
+        G4ThreeVector* GetPhotonPol() {return photonPol;};
+        G4double* GetPhotonTime() {return photonTime;};
+        G4double* GetPhotonWaveLength() {return photonWaveLength;}; 
+
   private:
         WCSimDetectorConstruction*      myDetector;
         G4ParticleGun*                  particleGun;
@@ -85,6 +93,7 @@ class WCSimPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
         G4bool   GenerateVertexInRock;
         G4bool   usePoissonPMT;
         G4double poissonPMTMean;
+        G4bool   usePhoProEvt; //M. Jia: Photon propagation flag 
 
         // These go with jhfNtuple
         //G4int mode;
@@ -119,6 +128,14 @@ class WCSimPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
         float fNuBeamAng;
         float fNuPlanePos[3];
 
+        //M. Jia: Add arrays for photon propagation.
+        G4int maxPhotonNumber;
+        G4double photonTime[50000];
+        G4double photonWaveLength[50000]; 
+        G4ThreeVector photonVtx[50000];
+        G4ThreeVector photonDir[50000];
+        G4ThreeVector photonPol[50000];
+
     public:
 
         inline TFile* GetInputRootrackerFile(){ return fInputRootrackerFile;}
@@ -138,6 +155,10 @@ class WCSimPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
   
         inline void SetGPSEvtGenerator(G4bool choice) { useGPSEvt = choice; }
         inline G4bool IsUsingGPSEvtGenerator()  { return useGPSEvt; }
+
+        //M. Jia: Addition of function for the photon propagation flag
+        inline void SetPhoProEvtGenerator(G4bool choice) { usePhoProEvt = choice; }
+        inline G4bool IsUsingPhoProEvtGenerator()  { return usePhoProEvt; }
 
         inline void OpenVectorFile(G4String fileName) 
         {

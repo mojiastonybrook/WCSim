@@ -6,7 +6,13 @@
 #include "G4PhysListFactory.hh"
 #include "G4UnitsTable.hh"
 #include "G4OpticalPhysics.hh"
-
+//include alternative EM models
+#include "G4EmStandardPhysics_option1.hh"
+#include "G4EmStandardPhysics_option2.hh"
+#include "G4EmStandardPhysics_option3.hh"
+#include "G4EmStandardPhysics_option4.hh"
+#include "WCSimPhotonPropagationBuilder.hh"
+//
 #include "WCSimPhysicsListFactoryMessenger.hh"
 #include "WCSimRootOptions.hh"
 
